@@ -7,8 +7,15 @@ use App\Book;
 
 class BookController extends Controller
 {
-    public function books()
+    public function books(Request $request)
     {
-        return view('books',['books' => Book::paginate(15)]);
+        $sort = $request->session()->get('orderBy', 'title');
+        if($request->input('exampleRadios')){
+            echo $request->input('exampleRadios');
+            $sort = $request->input('exampleRadios');
+            $request->session()->put('orderBy',$sort);
+        }
+        
+        return view('books',['books' => Book::orderBy($sort)->paginate(15)]);
     }
 }
